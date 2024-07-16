@@ -11,7 +11,7 @@ routes.get('/', async (request, response) => {
   id: v4(),
   name : "Yasmim",
   email: "yaasmimaparecida@gmail.com",
-  password: "abcde"
+  password_hash: "abcde"
  })
 
  return response.status(201).json(user);
