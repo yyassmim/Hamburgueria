@@ -26,7 +26,7 @@ return this;
     }
 
 
-    async comparePassword(password){
+    async  checkPassword(password){
 return  bcrypt.compare(password,this.password_hash);
     }
 }

@@ -1,5 +1,7 @@
+/* eslint-disable no-undef */
+
 import * as  Yup from 'yup';
-import User from '../models/user';
+import User from '../models/user' ;
 
 class SessionController {
    async store(request,response) {
@@ -13,9 +15,15 @@ class SessionController {
 
   const isValid = await schema.isValid(request.body);
 
+
+  const emailOrPasswordInCorrect = () => {
+    return response.status(401).json({
+        error: 'Make sure your email or password are correct '
+    });
+  }
+
   if (!isValid){
-    return response.status(401)
-    .json({error: 'Make sure your email or password are correct '})
+   return emailOrPasswordInCorrect();
   }
 
 
@@ -28,17 +36,25 @@ class SessionController {
     });
 
     if (!user){
-        return response.status(401)
-    .json({error: 'Make sure your email or password are correct '})
+        return  emailOrPasswordInCorrect();
     }
 
-const isSamePassword  = await user.comparePassword(password);
+const isSamePassword  = await user.checkPassword(password);
 
-console.log(isSamePassword);
+if (!isSamePassword) {
+    return emailOrPasswordIncorrect();
+  }
 
-return response.json({ message:'session'});
-   }
+  return response.status(200).json({
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    },
+});
 }
+}
+
 
 
 export default new SessionController();
